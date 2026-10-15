@@ -755,7 +755,7 @@ scene.add(group);
 const axes = new THREE.AxesHelper(2.2);
 group.add(axes);
 
-const COUNT = 4500;
+const COUNT = 3000;
 const positions = new Float32Array(COUNT * 3);
 const targets = new Float32Array(COUNT * 3);
 const velocity = new Float32Array(COUNT * 3);
@@ -765,7 +765,7 @@ geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
 const material = new THREE.PointsMaterial({
     color: 0xf472b6,
-    size: 0.06,
+    size: 0.07,
     transparent: true,
     opacity: 0.95,
     depthWrite: false
@@ -1062,8 +1062,8 @@ function processHands(resultData) {
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < 1.4 && distance > 0.03) {
-                    velocity[k] += (dx / distance) * 0.025;
-                    velocity[k + 1] += (dy / distance) * 0.025;
+                    velocity[k] += (dx / distance) * 0.035;
+                    velocity[k + 1] += (dy / distance) * 0.035;
                 }
             }
         }
@@ -1125,11 +1125,11 @@ function detect() {
     requestAnimationFrame(detect);
 }
 
-// BUCLE DE RENDERIZADO PRINCIPAL (THREE.JS)
+// BUCLE DE RENDERIZADO PRINCIPAL (TRANSICIÓN RÁPIDA DE 1-2 SEGUNDOS)
 function animate() {
     requestAnimationFrame(animate);
 
-    parameter += (targetParameter - parameter) * 0.1;
+    parameter += (targetParameter - parameter) * 0.35;
     updateMath();
 
     const positions = geometry.attributes.position.array;
@@ -1137,13 +1137,13 @@ function animate() {
     for (let i = 0; i < COUNT; i++) {
         const k = i * 3;
 
-        positions[k]     += (targets[k]     - positions[k])     * 0.08 + velocity[k];
-        positions[k + 1] += (targets[k + 1] - positions[k + 1]) * 0.08 + velocity[k + 1];
-        positions[k + 2] += (targets[k + 2] - positions[k + 2]) * 0.08 + velocity[k + 2];
+        positions[k]     += (targets[k]     - positions[k])     * 0.35 + velocity[k];
+        positions[k + 1] += (targets[k + 1] - positions[k + 1]) * 0.35 + velocity[k + 1];
+        positions[k + 2] += (targets[k + 2] - positions[k + 2]) * 0.35 + velocity[k + 2];
 
-        velocity[k]     *= 0.90;
-        velocity[k + 1] *= 0.90;
-        velocity[k + 2] *= 0.90;
+        velocity[k]     *= 0.75;
+        velocity[k + 1] *= 0.75;
+        velocity[k + 2] *= 0.75;
     }
 
     geometry.attributes.position.needsUpdate = true;
