@@ -282,34 +282,41 @@ body{
     pointer-events:none;
 }
 
+/* CONTROLES Y CÁMARA MOVIDOS FUERA DE LA GRÁFICA, DEBAJO DE LA MISMA */
+#externalControlsArea {
+    width: 100%;
+    padding: 0 10px;
+    margin-top: 10px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
 #controls{
-    position:absolute;
-    left:12px;
-    bottom:12px;
-    z-index:5;
-    padding:8px 10px;
-    border-radius:12px;
-    background:rgba(26, 8, 30, 0.8);
-    color:#fbcfe8;
-    font-size:8px;
-    line-height:1.5;
-    pointer-events:none;
-    border: 1px solid rgba(244, 114, 182, 0.2);
+    flex: 1;
+    min-width: 240px;
+    position: relative;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(26, 8, 30, 0.9);
+    color: #fbcfe8;
+    font-size: 11px;
+    line-height: 1.6;
+    border: 1px solid rgba(244, 114, 182, 0.25);
 }
 
 /* CONTENEDOR Y CANVAS PARA EL RASTREO VISUAL SOBRE LA CÁMARA */
 #cameraBox{
-    position:absolute;
-    right:12px;
-    bottom:12px;
-    z-index:8;
-    width:140px;
-    height:105px;
-    border-radius:12px;
-    overflow:hidden;
-    background:#000;
-    border:2px solid #f472b6;
-    box-shadow:0 5px 20px rgba(244, 114, 182, 0.3);
+    position: relative;
+    width: 180px;
+    height: 135px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    border: 2px solid #f472b6;
+    box-shadow: 0 5px 20px rgba(244, 114, 182, 0.3);
+    flex-shrink: 0;
 }
 
 #camera{
@@ -337,7 +344,7 @@ body{
    ========================================================================= */
 #mathPanel{
     width:100%;
-    padding:0 10px;
+    padding:15px 10px 0 10px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -473,6 +480,7 @@ body{
     #visualBox{ height:58vh; max-height:600px; }
     #mathPanel{ padding:0 20px 20px; }
     #editorSection{ padding:20px 20px 0 20px; }
+    #externalControlsArea{ padding: 0 20px; }
 }
 </style>
 </head>
@@ -527,7 +535,9 @@ body{
 <div id="visualBox">
     <div id="figureTitle">EVALUACIÓN DE FUNCIÓN</div>
     <canvas id="canvas"></canvas>
+</div>
 
+<div id="externalControlsArea">
     <div id="controls">
         ☝️ 1 = Evaluar Punto y Pendiente<br>
         ✌️ 2 = Recta Tangente<br>
@@ -1115,44 +1125,39 @@ function detect() {
     requestAnimationFrame(detect);
 }
 
-// BUCLE DE ANIMACIÓN
+// BUCLE DE RENDERIZADO PRINCIPAL (THREE.JS)
 function animate() {
     requestAnimationFrame(animate);
 
-    if (hasHand) {
-        parameter += (targetParameter - parameter) * 0.08;
-        if (currentMode === 2) generate(2);
-        updateMath();
+    parameter += (targetParameter - parameter) * 0.1;
+    updateMath();
+
+    const positions = geometry.attributes.position.array;
+
+    for (let i = 0; i < COUNT; i++) {
+        const k = i * 3;
+
+        positions[k]     += (targets[k]     - positions[k])     * 0.08 + velocity[k];
+        positions[k + 1] += (targets[k + 1] - positions[k + 1]) * 0.08 + velocity[k + 1];
+        positions[k + 2] += (targets[k + 2] - positions[k + 2]) * 0.08 + velocity[k + 2];
+
+        velocity[k]     *= 0.90;
+        velocity[k + 1] *= 0.90;
+        velocity[k + 2] *= 0.90;
     }
 
-    const pos = geometry.attributes.position.array;
-    for (let i = 0; i < COUNT * 3; i++) {
-        pos[i] += (targets[i] - pos[i]) * 0.08 + velocity[i];
-        velocity[i] *= 0.92;
-    }
     geometry.attributes.position.needsUpdate = true;
-
-    group.rotation.y = Math.sin(Date.now() * 0.0005) * 0.1;
-
     renderer.render(scene, camera);
 }
 
-function resize() {
-    const width = visualBox.clientWidth;
-    const height = visualBox.clientHeight;
-    if (width <= 0 || height <= 0) return;
-
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-}
-
-window.addEventListener("resize", resize);
-
 // INICIALIZACIÓN
+window.addEventListener("resize", () => {
+    camera.aspect = visualBox.clientWidth / visualBox.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(visualBox.clientWidth, visualBox.clientHeight);
+});
+
 parseUserEquation();
-changeMode(1);
-resize();
 animate();
 </script>
 </body>
