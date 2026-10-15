@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- =========================================================================
+     1. CONFIGURACIÓN Y CABECERA DEL DOCUMENTO (HTML)
+     ========================================================================= -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Math Particle Hands - Cálculo en Movimiento</title>
+
+<!-- IMPORTACIÓN DE KATEX PARA RENDERIZAR ECUACIONES EN FORMATO LATEX/MATEMÁTICO -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+<!-- =========================================================================
+     2. ESTILOS VISUALES (CSS) - TEMA FEMENINO / ROSA Y MAGENTA
+     ========================================================================= -->
+<style>
+*{
+    box-sizing:border-box;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    background:#120514;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+#app{
+    width:100%;
+    min-height:100vh;
+    padding-bottom:20px;
+}
+
+#header{
+    width:100%;
+    padding:18px 14px 12px;
+    text-align:center;
+    background:rgba(26, 8, 30, 0.98);
+    border-bottom:1px solid rgba(244, 114, 182, 0.25);
+}
+
+#header h1{
+    margin:0;
+    font-size:24px;
+    font-weight:900;
+    color: #f472b6;
+}
+
+.subtitle{
+    margin-top:5px;
+    color:#fbcfe8;
+    font-size:12px;
+}
+
+.creator{
+    margin-top:5px;
+    color:#f472b6;
+    font-size:10px;
+    font-weight:bold;
+}
+
+/* =========================================================================
+   PANEL SUPERIOR: EDITOR DE ECUACIONES Y EJEMPLOS
+   ========================================================================= */
+#editorSection{
+    width:100%;
+    padding:10px 10px 0 10px;
+}
+
+.editorCard{
+    background:#1f0a24;
+    border:1px solid rgba(244, 114, 182, 0.35);
+    border-radius:16px;
+    padding:16px;
+    box-shadow: 0 8px 25px rgba(244, 114, 182, 0.15);
+}
+
+.editorHeader{
+    color:#f472b6;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1px;
+    margin-bottom:10px;
+}
+
+.inputGroup{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.inputWrapper{
+    flex:1;
+    min-width:220px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    background:#120514;
+    border:1px solid rgba(244, 114, 182, 0.5);
+    border-radius:10px;
+    padding:0 12px;
+}
+
+.inputPrefix{
+    color:#f472b6;
+    font-size:18px;
+    font-weight:bold;
+    font-style:italic;
+    margin-right:8px;
+}
+
+#funcInput{
+    width:100%;
+    height:45px;
+    background:transparent;
+    border:0;
+    outline:none;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    font-family:monospace;
+}
+
+#btnCalculate{
+    background:#f472b6;
+    color:#120514;
+    border:0;
+    padding:0 24px;
+    height:45px;
+    border-radius:10px;
+    font-weight:900;
+    font-size:13px;
+    cursor:pointer;
+    letter-spacing:1px;
+    transition: background 0.2s, transform 0.1s;
+}
+
+#btnCalculate:hover{
+    background:#ec4899;
+    transform: translateY(-1px);
+}
+
+.valDisplay{
+    background:#120514;
+    border:1px solid rgba(244, 114, 182, 0.3);
+    border-radius:10px;
+    padding:0 12px;
+    height:45px;
+    display:flex;
+    align-items:center;
+    font-family:monospace;
+    font-size:14px;
+    color:#f472b6;
+}
+
+#xLabelDisplay{
+    background:transparent;
+    border:0;
+    outline:none;
+    color:#f472b6;
+    font-family:monospace;
+    font-size:14px;
+    font-weight:bold;
+    width:70px;
+}
+
+.examplesRow{
+    display:flex;
+    gap:6px;
+    margin-top:12px;
+    flex-wrap:wrap;
+    align-items:center;
+}
+
+.examplesLabel{
+    color:#fbcfe8;
+    font-size:10px;
+    font-weight:bold;
+    margin-right:4px;
+    opacity: 0.8;
+}
+
+.btnExample{
+    background:rgba(42, 14, 52, 0.8);
+    border:1px dashed rgba(244, 114, 182, 0.4);
+    color:#fbcfe8;
+    border-radius:6px;
+    padding:5px 10px;
+    font-size:11px;
+    font-family:monospace;
+    cursor:pointer;
+    transition:all 0.2s;
+}
+
+.btnExample:hover{
+    background:#f472b6;
+    color:#120514;
+    border-style:solid;
+}
+
+.actionsRow{
+    display:flex;
+    gap:8px;
+    margin-top:14px;
+    flex-wrap:wrap;
+}
+
+.btnAction{
+    background:#2a0e34;
+    border:1px solid rgba(244, 114, 182, 0.3);
+    color:#fbcfe8;
+    border-radius:8px;
+    padding:8px 12px;
+    font-size:11px;
+    font-weight:bold;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    transition: all 0.2s;
+}
+
+.btnAction:hover{
+    border-color:#f472b6;
+    color:#f472b6;
+    background:#381346;
+}
+
+#visualArea{
+    width:100%;
+    padding:10px;
+}
+
+#visualBox{
+    position:relative;
+    width:100%;
+    height:50vh;
+    min-height:300px;
+    max-height:480px;
+    overflow:hidden;
+    border-radius:20px;
+    background: radial-gradient(circle at center, #2e0e38 0%, #120514 80%);
+    border:1px solid rgba(244, 114, 182, 0.35);
+    box-shadow: inset 0 0 60px rgba(244, 114, 182, 0.08), 0 10px 35px rgba(0,0,0,.5);
+}
+
+#canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+#figureTitle{
+    position:absolute;
+    top:12px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:5;
+    width:max-content;
+    max-width:90%;
+    padding:8px 14px;
+    border-radius:30px;
+    background:rgba(26, 8, 30, 0.85);
+    border:1px solid rgba(244, 114, 182, 0.35);
+    color:#f472b6;
+    font-size:13px;
+    font-weight:900;
+    text-align:center;
+    pointer-events:none;
+}
+
+#controls{
+    position:absolute;
+    left:12px;
+    bottom:12px;
+    z-index:5;
+    padding:8px 10px;
+    border-radius:12px;
+    background:rgba(26, 8, 30, 0.8);
+    color:#fbcfe8;
+    font-size:8px;
+    line-height:1.5;
+    pointer-events:none;
+    border: 1px solid rgba(244, 114, 182, 0.2);
+}
+
+/* CONTENEDOR Y CANVAS PARA EL RASTREO VISUAL SOBRE LA CÁMARA */
+#cameraBox{
+    position:absolute;
+    right:12px;
+    bottom:12px;
+    z-index:8;
+    width:140px;
+    height:105px;
+    border-radius:12px;
+    overflow:hidden;
+    background:#000;
+    border:2px solid #f472b6;
+    box-shadow:0 5px 20px rgba(244, 114, 182, 0.3);
+}
+
+#camera{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:scaleX(-1);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#overlayCanvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    transform:scaleX(-1);
+}
+
+/* =========================================================================
+   TARJETA DE RESULTADO MATEMÁTICO
+   ========================================================================= */
+#mathPanel{
+    width:100%;
+    padding:0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mathResultCard{
+    background:#1f0a24;
+    border:1px solid rgba(244, 114, 182, 0.3);
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.3);
+}
+
+.mathResultHeader{
+    color:#f472b6;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1px;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.mathBlock{
+    border-left: 3px solid #f472b6;
+    padding-left: 12px;
+    margin-bottom: 16px;
+}
+
+.mathLabel{
+    color:#fbcfe8;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    opacity: 0.7;
+    margin-bottom: 4px;
+}
+
+.mathKatex{
+    font-size: 18px;
+    color: #ffffff;
+    min-height: 28px;
+}
+
+.tangentBox{
+    background: rgba(244, 114, 182, 0.05);
+    border: 1px solid rgba(244, 114, 182, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 8px;
+}
+
+.tangentSubtext{
+    font-size: 11px;
+    color: #fbcfe8;
+    opacity: 0.8;
+    margin-top: 4px;
+    font-family: monospace;
+}
+
+#dataGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:10px;
+}
+
+.dataCard{
+    padding:10px;
+    background:#2a0e34;
+    border-radius:12px;
+    border:1px solid rgba(244, 114, 182, 0.15);
+}
+
+.dataTitle{
+    color:#fbcfe8;
+    font-size:8px;
+    font-weight:900;
+    text-transform:uppercase;
+    opacity:0.7;
+}
+
+.dataValue{
+    margin-top:4px;
+    color:white;
+    font-size:11px;
+    line-height:1.5;
+}
+
+#statusGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:10px;
+}
+
+.status{
+    padding:10px;
+    border-radius:11px;
+    background:#2a0e34;
+    font-size:10px;
+}
+
+#handStatus{ color:#f472b6; }
+#cameraStatus{ color:#fbcfe8; text-align:right; }
+
+#start{
+    width:100%;
+    margin-top:10px;
+    padding:13px;
+    border:0;
+    border-radius:12px;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    color:white;
+    font-size:13px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+#start:hover{
+    transform: translateY(-1px);
+}
+
+#start:disabled{ opacity:.65; }
+
+@media(min-width:700px){
+    #app{ max-width:1200px; margin:auto; }
+    #visualArea{ padding:20px; }
+    #visualBox{ height:58vh; max-height:600px; }
+    #mathPanel{ padding:0 20px 20px; }
+    #editorSection{ padding:20px 20px 0 20px; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+<header id="header">
+    <h1>Math Particle Hands</h1>
+    <div class="subtitle">Cálculo Diferencial Interactivo en 3D</div>
+    <div class="creator">Trabajo realizado por Danna Ramos y Miguel Andrades</div>
+</header>
+
+<section id="editorSection">
+    <div class="editorCard">
+        <div class="editorHeader">INGRESA TU FUNCIÓN · ESCRIBE TU FUNCIÓN F(X)</div>
+        
+        <div class="inputGroup">
+            <div class="inputWrapper">
+                <span class="inputPrefix">f(x) =</span>
+                <input type="text" id="funcInput" value="x^2 + 3*x - 4" placeholder="Escribe tu función...">
+            </div>
+            <button id="btnCalculate">CALCULAR</button>
+            <div class="valDisplay">x =&nbsp;<input type="text" id="xLabelDisplay" value="2.00"></div>
+        </div>
+
+        <div class="examplesRow">
+            <span class="examplesLabel">EJEMPLOS</span>
+            <button class="btnExample" onclick="setEquation('x^2 + 3*x - 4')">x^2 + 3*x - 4</button>
+            <button class="btnExample" onclick="setEquation('x^3 - 4*x + 2')">x^3 - 4*x + 2</button>
+            <button class="btnExample" onclick="setEquation('sin(x)')">sin(x)</button>
+            <button class="btnExample" onclick="setEquation('e^x')">e^x</button>
+            <button class="btnExample" onclick="setEquation('log(x^2 + 1)')">ln(x^2+1)</button>
+            <button class="btnExample" onclick="setEquation('x * sin(x)')">x*sin(x)</button>
+            <button class="btnExample" onclick="setEquation('(x^2 + 1) / (x - 2)')">(x^2+1)/(x-2)</button>
+            <button class="btnExample" onclick="setEquation('sqrt(abs(x))')">sqrt(x)</button>
+            <button class="btnExample" onclick="setEquation('(x + 1)^5')">(x+1)^5</button>
+        </div>
+
+        <div class="actionsRow">
+            <button class="btnAction" onclick="changeMode(1)">◎ EVALUAR</button>
+            <button class="btnAction" onclick="changeMode(2)">⚡ RECTA TANGENTE</button>
+            <button class="btnAction" onclick="changeMode(3)">📈 GRAFICAR DERIVADAS</button>
+            <button class="btnAction" onclick="changeMode(4)">∿ ANALIZAR CRÍTICOS</button>
+            <button class="btnAction" onclick="changeMode(5)">🖐️ RETO RAZÓN DE CAMBIO</button>
+            <button class="btnAction" onclick="resetEquation()">🧹 LIMPIAR</button>
+        </div>
+    </div>
+</section>
+
+<section id="visualArea">
+<div id="visualBox">
+    <div id="figureTitle">EVALUACIÓN DE FUNCIÓN</div>
+    <canvas id="canvas"></canvas>
+
+    <div id="controls">
+        ☝️ 1 = Evaluar Punto y Pendiente<br>
+        ✌️ 2 = Recta Tangente<br>
+        🤟 3 = f(x), f'(x) y f''(x)<br>
+        🖖 4 = Puntos Críticos (Máx/Mín)<br>
+        🖐️ 5 = Reto: Razón de Cambio Aplicada<br>
+        ✊ = Repulsión
+    </div>
+
+    <div id="cameraBox">
+        <video id="camera" autoplay muted playsinline></video>
+        <canvas id="overlayCanvas"></canvas>
+    </div>
+</div>
+</section>
+
+<section id="mathPanel">
+    <div class="mathResultCard">
+        <div class="mathResultHeader">{ } RESULTADO MATEMÁTICO</div>
+        
+        <div class="mathBlock">
+            <div class="mathLabel">FUNCIÓN</div>
+            <div id="katexFunc" class="mathKatex"></div>
+        </div>
+
+        <div class="mathBlock">
+            <div class="mathLabel">PRIMERA DERIVADA</div>
+            <div id="katexD1" class="mathKatex"></div>
+        </div>
+
+        <div class="mathBlock">
+            <div class="mathLabel">SEGUNDA DERIVADA</div>
+            <div id="katexD2" class="mathKatex"></div>
+        </div>
+
+        <div class="tangentBox">
+            <div class="mathLabel" id="tangentHeaderLabel">RECTA TANGENTE EN X = 2.00</div>
+            <div id="katexTangent" class="mathKatex"></div>
+            <div id="tangentFormulaSub" class="tangentSubtext"></div>
+        </div>
+    </div>
+
+    <div class="mathResultCard">
+        <div class="mathResultHeader">📊 ESTADO Y CONTROLES</div>
+        <div id="concept" style="color:#f472b6; font-size:18px; font-weight:bold;">EVALUACIÓN Y PENDIENTE</div>
+        <div id="conceptDescription" style="color:#fbcfe8; font-size:11px; margin-top:4px;">Mover el punto x = a sobre la gráfica para evaluar la función y calcular la pendiente.</div>
+
+        <div id="dataGrid">
+            <div class="dataCard">
+                <div class="dataTitle" id="titleParam1">VALOR DE X (a)</div>
+                <div id="xValue" class="dataValue">2.00</div>
+            </div>
+            <div class="dataCard">
+                <div class="dataTitle" id="titleParam2">EVALUACIÓN f(a)</div>
+                <div id="yValue" class="dataValue">6.00</div>
+            </div>
+        </div>
+
+        <div id="statusGrid">
+            <div id="handStatus" class="status">✋ Sin mano</div>
+            <div id="cameraStatus" class="status">📷 Cámara apagada</div>
+        </div>
+
+        <button id="start">📷 ACTIVAR CÁMARA</button>
+    </div>
+</section>
+</div>
+
+<!-- LIBRERÍAS EXTERNAS -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+
+<script>
+const canvas = document.getElementById("canvas");
+const visualBox = document.getElementById("visualBox");
+const video = document.getElementById("camera");
+const overlayCanvas = document.getElementById("overlayCanvas");
+const overlayCtx = overlayCanvas.getContext("2d");
+const start = document.getElementById("start");
+const figureTitle = document.getElementById("figureTitle");
+const concept = document.getElementById("concept");
+const conceptDescription = document.getElementById("conceptDescription");
+const xValue = document.getElementById("xValue");
+const yValue = document.getElementById("yValue");
+const titleParam1 = document.getElementById("titleParam1");
+const titleParam2 = document.getElementById("titleParam2");
+const handStatus = document.getElementById("handStatus");
+const cameraStatus = document.getElementById("cameraStatus");
+
+const funcInput = document.getElementById("funcInput");
+const btnCalculate = document.getElementById("btnCalculate");
+const xLabelDisplay = document.getElementById("xLabelDisplay");
+
+const katexFunc = document.getElementById("katexFunc");
+const katexD1 = document.getElementById("katexD1");
+const katexD2 = document.getElementById("katexD2");
+const katexTangent = document.getElementById("katexTangent");
+const tangentHeaderLabel = document.getElementById("tangentHeaderLabel");
+const tangentFormulaSub = document.getElementById("tangentFormulaSub");
+
+let handLandmarker = null;
+let stream = null;
+let currentMode = 1;
+let parameter = 2.0;
+let targetParameter = 2.0;
+let hasHand = false;
+let lastVideoTime = -1;
+
+let userExpr = "x^2 + 3*x - 4";
+let nodeF = null;
+let nodeD1 = null;
+let nodeD2 = null;
+let compiledF = null;
+let compiledD1 = null;
+let compiledD2 = null;
+
+// ESTRUCTURA DE CONEXIONES DE LOS DEDOS MEDIAPIPE
+const HAND_CONNECTIONS = [
+    [0, 1], [1, 2], [2, 3], [3, 4],       // Pulgar
+    [0, 5], [5, 6], [6, 7], [7, 8],       // Índice
+    [5, 9], [9, 10], [10, 11], [11, 12],  // Medio
+    [9, 13], [13, 14], [14, 15], [15, 16],// Anular
+    [13, 17], [0, 17], [17, 18], [18, 19], [19, 20] // Meñique y Palma
+];
+
+function parseUserEquation() {
+    try {
+        userExpr = funcInput.value.trim();
+        if(!userExpr) userExpr = "x";
+
+        nodeF = math.parse(userExpr);
+        compiledF = nodeF.compile();
+
+        nodeD1 = math.derivative(nodeF, 'x');
+        compiledD1 = nodeD1.compile();
+
+        nodeD2 = math.derivative(nodeD1, 'x');
+        compiledD2 = nodeD2.compile();
+
+        generate(currentMode);
+        updateMath();
+    } catch (err) {
+        console.warn("Ecuación no válida:", err);
+    }
+}
+
+function f(x) {
+    try {
+        if(!compiledF) return 0;
+        const res = compiledF.evaluate({ x: x });
+        return isNaN(res) || !isFinite(res) ? NaN : res;
+    } catch(e) { return NaN; }
+}
+
+function d1(x) {
+    try {
+        if(!compiledD1) return 0;
+        const res = compiledD1.evaluate({ x: x });
+        return isNaN(res) || !isFinite(res) ? NaN : res;
+    } catch(e) { return NaN; }
+}
+
+function d2(x) {
+    try {
+        if(!compiledD2) return 0;
+        const res = compiledD2.evaluate({ x: x });
+        return isNaN(res) || !isFinite(res) ? NaN : res;
+    } catch(e) { return NaN; }
+}
+
+function setEquation(eqText) {
+    funcInput.value = eqText;
+    parseUserEquation();
+}
+
+function resetEquation() {
+    funcInput.value = "0";
+    parseUserEquation();
+}
+
+btnCalculate.onclick = parseUserEquation;
+
+funcInput.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") parseUserEquation();
+});
+
+// MODIFICAR VALOR DE X DESDE EL INPUT
+function updateXFromInput() {
+    const val = parseFloat(xLabelDisplay.value);
+    if (!isNaN(val)) {
+        parameter = val;
+        targetParameter = val;
+        generate(currentMode);
+        updateMath();
+    }
+}
+
+xLabelDisplay.addEventListener("change", updateXFromInput);
+xLabelDisplay.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") updateXFromInput();
+});
+
+// ESCENA Y PARTÍCULAS
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, visualBox.clientWidth / visualBox.clientHeight, 0.1, 100);
+camera.position.set(0, 0, 5.5);
+
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+renderer.setSize(visualBox.clientWidth, visualBox.clientHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const group = new THREE.Group();
+scene.add(group);
+
+const axes = new THREE.AxesHelper(2.2);
+group.add(axes);
+
+const COUNT = 4500;
+const positions = new Float32Array(COUNT * 3);
+const targets = new Float32Array(COUNT * 3);
+const velocity = new Float32Array(COUNT * 3);
+
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+const material = new THREE.PointsMaterial({
+    color: 0xf472b6,
+    size: 0.06,
+    transparent: true,
+    opacity: 0.95,
+    depthWrite: false
+});
+
+const particles = new THREE.Points(geometry, material);
+group.add(particles);
+
+const pointArray = new Float32Array([0, 0, 0.15]);
+const pointGeometry = new THREE.BufferGeometry();
+pointGeometry.setAttribute("position", new THREE.BufferAttribute(pointArray, 3));
+const pointMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.22 });
+const selectedPoint = new THREE.Points(pointGeometry, pointMaterial);
+group.add(selectedPoint);
+
+function generate(mode) {
+    for (let i = 0; i < COUNT; i++) {
+        const k = i * 3;
+        let x = 0, y = 0, z = 0;
+
+        if (mode === 1 || mode === 2) {
+            x = -2.2 + (i / COUNT) * 4.4;
+            const fx = f(x);
+            y = isNaN(fx) ? 0 : fx * 0.35;
+            z = (Math.random() - 0.5) * 0.05;
+
+            if (mode === 2 && i > COUNT * 0.6) {
+                const x0 = parameter;
+                const slope = d1(x0);
+                const tangentY = f(x0) + slope * (x - x0);
+                y = isNaN(tangentY) ? 0 : tangentY * 0.35;
+                z = 0.1;
+            }
+        } 
+        else if (mode === 3) {
+            x = -2.2 + (i / COUNT) * 4.4;
+            if (i < COUNT * 0.4) {
+                const fx = f(x);
+                y = isNaN(fx) ? 0 : fx * 0.35;
+                z = 0;
+            } else if (i < COUNT * 0.75) {
+                const d1x = d1(x);
+                y = isNaN(d1x) ? 0 : d1x * 0.35;
+                z = 0.2;
+            } else {
+                const d2x = d2(x);
+                y = isNaN(d2x) ? 0 : d2x * 0.35;
+                z = -0.2;
+            }
+        } 
+        else if (mode === 4) {
+            x = -2.2 + (i / COUNT) * 4.4;
+            const fx = f(x);
+            y = isNaN(fx) ? 0 : fx * 0.35;
+            z = (Math.random() - 0.5) * 0.05;
+
+            if (i > COUNT * 0.8) {
+                const isMax = Math.random() > 0.5;
+                const cx = isMax ? -1 : 1;
+                const cy = f(cx) * 0.35;
+                x = cx + (Math.random() - 0.5) * 0.3;
+                y = (isNaN(cy) ? 0 : cy) + (Math.random() - 0.5) * 0.3;
+                z = (Math.random() - 0.5) * 0.3;
+            }
+        } 
+        else if (mode === 5) {
+            const t = -2.2 + (i / COUNT) * 4.4;
+            const rate = d1(t);
+
+            if (!isFinite(rate) || isNaN(rate) || Math.abs(rate) > 50) {
+                x = (Math.random() - 0.5) * 6;
+                y = (Math.random() - 0.5) * 6;
+                z = (Math.random() - 0.5) * 6;
+            } else {
+                x = t;
+                const ft = f(t);
+                y = isNaN(ft) ? 0 : ft * 0.35;
+                z = Math.sin(t * 5 + Date.now() * 0.003) * (rate * 0.08);
+            }
+        }
+
+        targets[k] = x;
+        targets[k + 1] = y;
+        targets[k + 2] = z;
+
+        if (positions[k] === 0 && positions[k+1] === 0 && positions[k+2] === 0) {
+            positions[k] = x;
+            positions[k+1] = y;
+            positions[k+2] = z;
+        }
+    }
+}
+
+function changeMode(mode) {
+    currentMode = mode;
+
+    const names = {
+        1: "EVALUACIÓN Y PENDIENTE",
+        2: "RECTA TANGENTE EN UN PUNTO",
+        3: "RELACIÓN f(x), f'(x) Y f''(x)",
+        4: "PUNTOS CRÍTICOS (MÁX/MÍN)",
+        5: "RETO: RAZÓN DE CAMBIO APLICADA"
+    };
+
+    const descriptions = {
+        1: "Mueve el punto x = a sobre la gráfica para evaluar la función y calcular la derivada en tiempo real.",
+        2: "Construcción de la recta tangente y = f(a) + f'(a)(x - a) adaptada a tu función actual.",
+        3: "Visualización de tu función f(x) junto con su primera derivada f'(x) y segunda derivada f''(x).",
+        4: "Análisis visual de crestas, valles y cambios de pendiente.",
+        5: "Simulación de velocidad y flujo df/dt. Evalúa si el sistema crece, decrece o si entra en un error de indeterminación."
+    };
+
+    if(mode === 5) {
+        titleParam1.textContent = "TIEMPO / POSICIÓN (t)";
+        titleParam2.textContent = "RAZÓN DE CAMBIO (df/dt)";
+    } else {
+        titleParam1.textContent = "VALOR DE X (a)";
+        titleParam2.textContent = "EVALUACIÓN f(a)";
+    }
+
+    figureTitle.textContent = names[mode];
+    concept.textContent = names[mode];
+    conceptDescription.textContent = descriptions[mode];
+
+    generate(mode);
+    updateMath();
+}
+
+function updateMath() {
+    const a = parameter;
+    xValue.textContent = a.toFixed(2);
+    if (document.activeElement !== xLabelDisplay) {
+        xLabelDisplay.value = a.toFixed(2);
+    }
+
+    const fa = f(a);
+    const m = d1(a);
+
+    if (!isFinite(fa) || isNaN(fa) || !isFinite(m) || isNaN(m)) {
+        yValue.textContent = "⚠️ ERROR (Indefinido)";
+        if(currentMode === 5) {
+            tangentHeaderLabel.textContent = "⚠️ INDETERMINACIÓN EN EL SISTEMA";
+            tangentFormulaSub.textContent = "Error: División entre cero o asíntota en t = " + a.toFixed(2);
+            if (window.katex) katex.render(`\\lim_{t \\to a} \\frac{df}{dt} = \\text{Indefinido}`, katexTangent);
+        }
+    } else {
+        if(currentMode === 5) {
+            yValue.textContent = m.toFixed(2) + " u/s";
+            tangentHeaderLabel.textContent = `ESTADO DEL SISTEMA EN T = ${a.toFixed(2)}`;
+            
+            const estado = m > 0.05 ? "\\text{Creciendo (} \\uparrow \\text{)}" : (m < -0.05 ? "\\text{Decreciendo (} \\downarrow \\text{)}" : "\\text{Equilibrio (} = \\text{)}");
+            tangentFormulaSub.textContent = `Ritmo de cambio instantáneo: ${m.toFixed(2)}`;
+            if (window.katex) katex.render(`\\frac{df}{dt} = ${m.toFixed(2)} \\quad \\implies \\quad ${estado}`, katexTangent);
+        } else {
+            yValue.textContent = fa.toFixed(2);
+            const b = fa - m * a;
+
+            if (window.katex && nodeF && nodeD1 && nodeD2) {
+                try {
+                    katex.render(`f(x) = ${nodeF.toTex()}`, katexFunc);
+                    katex.render(`f'(x) = ${nodeD1.toTex()}`, katexD1);
+                    katex.render(`f''(x) = ${nodeD2.toTex()}`, katexD2);
+
+                    tangentHeaderLabel.textContent = `RECTA TANGENTE EN X = ${a.toFixed(2)}`;
+                    const bSign = b >= 0 ? `+ ${b.toFixed(2)}` : `- ${Math.abs(b).toFixed(2)}`;
+                    katex.render(`y = ${m.toFixed(2)} \\cdot x ${bSign}`, katexTangent);
+
+                    const faSign = fa >= 0 ? `+ ${fa.toFixed(2)}` : `- ${Math.abs(fa).toFixed(2)}`;
+                    const aSign = a >= 0 ? `- ${a.toFixed(2)}` : `+ ${Math.abs(a).toFixed(2)}`;
+                    tangentFormulaSub.textContent = `y = ${m.toFixed(2)}(x ${aSign}) ${faSign}`;
+                } catch(e) {
+                    console.error("Error al renderizar KaTeX:", e);
+                }
+            }
+        }
+    }
+
+    pointArray[0] = a;
+    pointArray[1] = isNaN(fa) ? 0 : fa * 0.35;
+    pointArray[2] = 0.15;
+    pointGeometry.attributes.position.needsUpdate = true;
+}
+
+// DETECCIÓN Y CONTEO DE DEDOS
+function countFingers(hand) {
+    const tips = [8, 12, 16, 20];
+    const joints = [6, 10, 14, 18];
+    let count = 0;
+
+    for (let i = 0; i < 4; i++) {
+        if (hand[tips[i]].y < hand[joints[i]].y) count++;
+    }
+
+    if (Math.abs(hand[4].x - hand[17].x) > Math.abs(hand[3].x - hand[17].x)) {
+        count++;
+    }
+
+    return count;
+}
+
+// DIBUJO DE ESQUELETO Y PUNTOS EN LA CÁMARA
+function drawHandSkeleton(landmarksList) {
+    overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+    if (!landmarksList || landmarksList.length === 0) return;
+
+    for (const landmarks of landmarksList) {
+        overlayCtx.strokeStyle = "#f472b6";
+        overlayCtx.lineWidth = 2.5;
+
+        for (const connection of HAND_CONNECTIONS) {
+            const p1 = landmarks[connection[0]];
+            const p2 = landmarks[connection[1]];
+
+            overlayCtx.beginPath();
+            overlayCtx.moveTo(p1.x * overlayCanvas.width, p1.y * overlayCanvas.height);
+            overlayCtx.lineTo(p2.x * overlayCanvas.width, p2.y * overlayCanvas.height);
+            overlayCtx.stroke();
+        }
+
+        for (let i = 0; i < landmarks.length; i++) {
+            const pt = landmarks[i];
+            const cx = pt.x * overlayCanvas.width;
+            const cy = pt.y * overlayCanvas.height;
+
+            overlayCtx.beginPath();
+            overlayCtx.arc(cx, cy, [4, 8, 12, 16, 20].includes(i) ? 4.5 : 3, 0, 2 * Math.PI);
+            overlayCtx.fillStyle = [4, 8, 12, 16, 20].includes(i) ? "#ffffff" : "#ec4899";
+            overlayCtx.fill();
+            overlayCtx.strokeStyle = "#120514";
+            overlayCtx.lineWidth = 1;
+            overlayCtx.stroke();
+        }
+
+        const wrist = landmarks[0];
+        const fingers = countFingers(landmarks);
+        
+        overlayCtx.save();
+        overlayCtx.scale(-1, 1);
+        overlayCtx.fillStyle = "#ffffff";
+        overlayCtx.font = "bold 14px monospace";
+        overlayCtx.shadowColor = "#f472b6";
+        overlayCtx.shadowBlur = 6;
+        overlayCtx.fillText(`${fingers} DEDO(S)`, -(wrist.x * overlayCanvas.width), wrist.y * overlayCanvas.height - 10);
+        overlayCtx.restore();
+    }
+}
+
+function processHands(resultData) {
+    let detected = false;
+    let rightHand = null;
+
+    if (resultData.landmarks && resultData.landmarks.length) {
+        detected = true;
+        drawHandSkeleton(resultData.landmarks);
+
+        for (let i = 0; i < resultData.landmarks.length; i++) {
+            const label = resultData.handedness[i][0].categoryName;
+            if (label === "Right") {
+                rightHand = resultData.landmarks[i];
+            }
+        }
+    } else {
+        overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+    }
+
+    hasHand = detected;
+
+    if (!detected) {
+        handStatus.textContent = "✋ Sin mano — congelado";
+        return;
+    }
+
+    if (rightHand) {
+        const fingers = countFingers(rightHand);
+        handStatus.textContent = `✋ Mano derecha: ${fingers} dedo(s)`;
+
+        if (fingers >= 1 && fingers <= 5 && fingers !== currentMode) {
+            changeMode(fingers);
+        }
+
+        targetParameter = THREE.MathUtils.lerp(-2.0, 2.0, rightHand[9].x);
+
+        if (fingers === 0) {
+            handStatus.textContent = "✊ Puño — repulsión activa";
+            const palm = rightHand[9];
+            const hx = (palm.x - 0.5) * 5;
+            const hy = -(palm.y - 0.5) * 3;
+
+            for (let i = 0; i < COUNT; i++) {
+                const k = i * 3;
+                const dx = positions[k] - hx;
+                const dy = positions[k + 1] - hy;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 1.4 && distance > 0.03) {
+                    velocity[k] += (dx / distance) * 0.025;
+                    velocity[k + 1] += (dy / distance) * 0.025;
+                }
+            }
+        }
+    }
+}
+
+start.onclick = async function() {
+    try {
+        start.disabled = true;
+        start.textContent = "⏳ CARGANDO CÁMARA...";
+
+        const visionModule = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/+esm");
+        const vision = await visionModule.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+        
+        handLandmarker = await visionModule.HandLandmarker.createFromOptions(vision, {
+            baseOptions: {
+                modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
+            },
+            runningMode: "VIDEO",
+            numHands: 2
+        });
+
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } },
+            audio: false
+        });
+
+        video.srcObject = stream;
+        await video.play();
+
+        overlayCanvas.width = video.videoWidth || 640;
+        overlayCanvas.height = video.videoHeight || 480;
+
+        cameraStatus.textContent = "📷 Cámara activa";
+        start.textContent = "✓ CÁMARA ACTIVA";
+        detect();
+    } catch (error) {
+        console.error(error);
+        cameraStatus.textContent = "⚠ Error de cámara";
+        start.disabled = false;
+        start.textContent = "📷 ACTIVAR CÁMARA";
+    }
+};
+
+function detect() {
+    if (handLandmarker && video.readyState >= 2) {
+        if (video.currentTime !== lastVideoTime) {
+            lastVideoTime = video.currentTime;
+            
+            if(overlayCanvas.width !== video.videoWidth){
+                overlayCanvas.width = video.videoWidth;
+                overlayCanvas.height = video.videoHeight;
+            }
+
+            const res = handLandmarker.detectForVideo(video, performance.now());
+            processHands(res);
+        }
+    }
+    requestAnimationFrame(detect);
+}
+
+// BUCLE DE ANIMACIÓN
+function animate() {
+    requestAnimationFrame(animate);
+
+    if (hasHand) {
+        parameter += (targetParameter - parameter) * 0.08;
+        if (currentMode === 2) generate(2);
+        updateMath();
+    }
+
+    const pos = geometry.attributes.position.array;
+    for (let i = 0; i < COUNT * 3; i++) {
+        pos[i] += (targets[i] - pos[i]) * 0.08 + velocity[i];
+        velocity[i] *= 0.92;
+    }
+    geometry.attributes.position.needsUpdate = true;
+
+    group.rotation.y = Math.sin(Date.now() * 0.0005) * 0.1;
+
+    renderer.render(scene, camera);
+}
+
+function resize() {
+    const width = visualBox.clientWidth;
+    const height = visualBox.clientHeight;
+    if (width <= 0 || height <= 0) return;
+
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+}
+
+window.addEventListener("resize", resize);
+
+// INICIALIZACIÓN
+parseUserEquation();
+changeMode(1);
+resize();
+animate();
+</script>
+</body>
+</html>
